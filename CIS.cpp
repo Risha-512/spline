@@ -4,68 +4,69 @@
 
 namespace Spline
 {
-   void CIS::update_spline(const std::vector<Point>& P, const std::vector<double> &func_value)
+   void CIS::update(const std::vector<Point>& p, const std::vector<double> &value)
    {
-      this->points.clear();
-      for (auto elem : P)
-         this->points.push_back(elem);
+      points.clear();
+      for (auto elem : p)
+         points.push_back(elem);
 
-      size_t segment_num = P.size() - 1;
+      size_t segment_num = p.size() - 1;
       double h_cur, h_next;
 
-      A.resize(segment_num);
-      B.resize(segment_num);
-      C.resize(segment_num + 1);
-      D.resize(segment_num);
+      a.resize(segment_num);
+      b.resize(segment_num);
+      c.resize(segment_num + 1);
+      d.resize(segment_num);
 
       for (size_t i = 1; i < segment_num; i++)
       {
-         h_cur = P[i].get_x() - P[i - 1].get_x();
-         h_next = P[i + 1].get_x() - P[i].get_x();
+         h_cur = p[i].get_x() - p[i - 1].get_x();
+         h_next = p[i + 1].get_x() - p[i].get_x();
 
-         A[i] = h_cur;
-         B[i - 1] = 2 * (h_cur + h_next);
-         C[i - 1] = 3.0 * ((func_value[i + 1] - func_value[i]) / h_next - (func_value[i] - func_value[i - 1]) / h_cur);
-         D[i - 1] = h_next;
+         a[i] = h_cur;
+         b[i - 1] = 2 * (h_cur + h_next);
+         c[i - 1] = 3.0 * ((value[i + 1] - value[i]) / h_next - (value[i] - value[i - 1]) / h_cur);
+         d[i - 1] = h_next;
       }
 
       for (size_t i = 1; i < segment_num - 1; i++)
       {
-         B[i] -= A[i] / B[i - 1] * D[i - 1];
-         C[i] -= A[i] / B[i - 1] * C[i - 1];
+         b[i] -= a[i] / b[i - 1] * d[i - 1];
+         c[i] -= a[i] / b[i - 1] * c[i - 1];
       }
 
-      C[segment_num - 1] /= B[segment_num - 2];
+      c[segment_num - 1] /= b[segment_num - 2];
       for (size_t i = segment_num - 3; i >= 0; i--)
-         C[i] = (C[i] - C[i + 1] * D[i]) / B[i];
+         c[i] = (c[i] - c[i + 1] * d[i]) / b[i];
 
-      C[segment_num] = 0.0;
+      c[segment_num] = 0.0;
       for (size_t i = segment_num - 1; i > 0; i--)
-         C[i] = C[i - 1];
-      C[0] = 0.0;
+         c[i] = c[i - 1];
+      c[0] = 0.0;
 
       for (size_t i = 0; i < segment_num; i++)
       {
-         h_cur = P[i + 1].get_x() - P[i].get_x();
-         A[i] = func_value[i];
-         B[i] = (func_value[i + 1] - func_value[i]) / h_cur - (C[i + 1] + 2.0 * C[i]) * h_cur / 3.0;
-         D[i] = (C[i + 1] - C[i]) / h_cur / 3.0;
+         h_cur = p[i + 1].get_x() - p[i].get_x();
+         a[i] = value[i];
+         b[i] = (value[i + 1] - value[i]) / h_cur - (c[i + 1] + 2.0 * c[i]) * h_cur / 3.0;
+         d[i] = (c[i + 1] - c[i]) / h_cur / 3.0;
       }
    }
 
-   void CIS::get_value(const Point &P, double *result) const
+   void CIS::get_value(const Point &p, double *result) const
    {
       double eps = 1e-7;
       size_t segment_num = points.size() - 1;
+      double elem = p.get_x();
 
       for (size_t i = 0; i < segment_num; i++)
-         if (P.get_x() > points[i].get_x() && P.get_x() < points[i + 1].get_x() || fabs(P.get_x() - points[i].get_x()) < eps ||
-            fabs(P.get_x() - points[i + 1].get_x()) < eps)
+         if (elem > points[i].get_x() && elem < points[i + 1].get_x() || fabs(elem - points[i].get_x()) < eps ||
+            fabs(elem - points[i + 1].get_x()) < eps)
          {
-            double diff = fabs(P.get_x() - points[i].get_x());
-            result[0] = A[i] + B[i] * diff + C[i] * pow(diff, 2) + D[i] * pow(diff, 3);
-            result[1] = B[i] + 2.0 * C[i] * diff + 3.0 * D[i] * pow(diff, 2);
-            result[2] = 2.0 * C[i] + 6.0 * D[i] * diff;
+            double diff = fabs(elem - points[i].get_x());
+            result[0] = a[i] + b[i] * diff + c[i] * pow(diff, 2) + d[i] * pow(diff, 3);
+            result[1] = b[i] + 2.0 * c[i] * diff + 3.0 * d[i] * pow(diff, 2);
+            result[2] = 2.0 * c[i] + 6.0 * d[i] * diff;
             return;
          }
 

@@ -4,9 +4,9 @@ namespace Spline
    class Point
    {
    private:
-      double X, Y, Z;
+      double x, y, z;
    public:
-      Point(double x, double y, double z) : X(x), Y(y), Z(z) {}
+      Point(double x, double y, double z) : x(x), y(y), z(z) {}
 
       double get_x() const;
       double get_y() const;

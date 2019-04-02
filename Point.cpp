@@ -3,11 +3,11 @@
 namespace Spline
 {
    double Point::get_x() const
-   { return X; }
+   { return x; }
 
    double Point::get_y() const
-   { return Y; }
+   { return y; }
 
    double Point::get_z() const
-   { return Z; }
+   { return z; }
 }
