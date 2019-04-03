@@ -16,6 +16,6 @@ namespace Spline
    public:
       SS(const double &s) : smooth(s) {};
       void update(const std::vector<Point> &p, const std::vector<double> &value) override;
-      void get_value(const Point &p, double *result) const override;
+	  std::vector<double> get_value(const Point &p) const override;
    };
 }

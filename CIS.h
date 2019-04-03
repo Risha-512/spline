@@ -10,6 +10,6 @@ namespace Spline
       std::vector<double> a, b, c, d;
    public:
       void update(const std::vector<Point> &p, const std::vector<double> &value) override;
-      void get_value(const Point &p, double *result) const override;
+	  std::vector<double> get_value(const Point &p) const override;
    };
 }

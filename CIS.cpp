@@ -53,11 +53,12 @@ namespace Spline
       }
    }
 
-   void CIS::get_value(const Point &p, double *result) const
+   std::vector<double> CIS::get_value(const Point &p) const
    {
       double eps = 1e-7;
       size_t segment_num = points.size() - 1;
       double elem = p.get_x();
+	  std::vector<double> result (3,0);
 
       for (size_t i = 0; i < segment_num; i++)
          if (elem > points[i].get_x() && elem < points[i + 1].get_x() || fabs(elem - points[i].get_x()) < eps ||
@@ -67,7 +68,7 @@ namespace Spline
             result[0] = a[i] + b[i] * diff + c[i] * pow(diff, 2) + d[i] * pow(diff, 3);
             result[1] = b[i] + 2.0 * c[i] * diff + 3.0 * d[i] * pow(diff, 2);
             result[2] = 2.0 * c[i] + 6.0 * d[i] * diff;
-            return;
+            return result;
          }
 
       throw std::exception("The point wasn't found");

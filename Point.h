@@ -6,8 +6,8 @@ namespace Spline
    private:
       double x, y, z;
    public:
-      Point(double x, double y, double z) : x(x), y(y), z(z) {}
-
+      Point(double X, double Y, double Z) : x(X), y(Y), z(Z) {}
+	  Point() : x(0), y(0), z(0) {}
       double get_x() const;
       double get_y() const;
       double get_z() const;
