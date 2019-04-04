@@ -71,6 +71,6 @@ namespace Spline
             return result;
          }
 
-      throw std::exception("The point wasn't found");
+      throw std::runtime_error("The point wasn't found");
    }
 }

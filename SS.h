@@ -1,5 +1,6 @@
 #pragma once
 #include "Spline.h"
+#include <exception> // std::exception
 
 namespace Spline
 {

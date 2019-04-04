@@ -12,15 +12,9 @@ namespace Spline
 	{
 		switch (num)
 		{
-		case 1:
-			return 0.5 * (1 - ksi);
-			break;
-		case 2:
-			return 0.5 * (1 + ksi);
-			break;
-		default:
-			throw std::exception("Wrong function number");
-			break;
+		case 1: return 0.5 * (1 - ksi);
+		case 2: return 0.5 * (1 + ksi);
+		default: throw std::runtime_error("Wrong function number");
 		}
 	}
 
@@ -28,15 +22,9 @@ namespace Spline
 	{
 		switch (num)
 		{
-		case 1:
-			return -0.5;
-			break;
-		case 2:
-			return 0.5;
-			break;
-		default:
-			throw std::exception("Wrong derivative number");
-			break;
+		case 1: return -0.5;
+		case 2: return 0.5;
+		default: throw std::runtime_error("Wrong derivative number");
 		}
 	}
 
@@ -109,6 +97,6 @@ namespace Spline
 				result[2] = 0.0;
 				return result;
 			}
-		throw std::exception("The point wasn't found");
+		throw std::runtime_error("The point wasn't found");
 	}
 }

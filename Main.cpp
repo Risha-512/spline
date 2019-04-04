@@ -28,22 +28,22 @@ namespace Spline
 
 using namespace Spline;
 
-	int main()
-	{
-		CIS cis;
-		double a = 0.0, b = 12.0;
-		size_t n = 6;
-		std::vector<double> test = regular(a, b, n);
-		std::vector<std::vector<double>> spline_matrix;
+int main()
+{
+    CIS cis;
+    double a = 0.0, b = 12.0;
+    size_t n = 6;
+    std::vector<double> test = regular(a, b, n);
+    std::vector<std::vector<double>> spline_matrix;
 
 
 
-		//for (const auto &elem : test)
-		//{
-		//	spline_matrix.push_back(cis.get_value(elem));
-		//}
-		//std::vector<Point> test = adaptive(0, 15, 2, 4);
-		//test.clear();
-		//test = regular(0, 10, 5);
-		return 1;
-	}
+    //for (const auto &elem : test)
+    //{
+    //	spline_matrix.push_back(cis.get_value(elem));
+    //}
+    //std::vector<Point> test = adaptive(0, 15, 2, 4);
+    //test.clear();
+    //test = regular(0, 10, 5);
+    return 1;
+}
