@@ -4,7 +4,7 @@
 
 namespace Spline
 {
-   void CIS::update(const std::vector<Point>& p, const std::vector<double> &value)
+   void CIS::update(const std::vector<Point> &p, const std::vector<double> &value)
    {
       points.clear();
       for (auto elem : p)
@@ -36,7 +36,7 @@ namespace Spline
       }
 
       c[segment_num - 1] /= b[segment_num - 2];
-      for (size_t i = segment_num - 3; i >= 0; i--)
+      for (size_t i = segment_num - 3; i != SIZE_MAX; i--)
          c[i] = (c[i] - c[i + 1] * d[i]) / b[i];
 
       c[segment_num] = 0.0;

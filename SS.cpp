@@ -75,7 +75,7 @@ namespace Spline
 		}
 
 		alpha[segment_num] /= b[segment_num];
-		for (size_t j = segment_num - 1; j >= 0; j--)
+		for (size_t j = segment_num - 1; j != SIZE_MAX; j--)
 			alpha[j] = (alpha[j] - alpha[j + 1] * c[j]) / b[j];
 	}
 
