@@ -28,13 +28,9 @@ namespace Spline
 		}
 	}
 
-	void SS::update(const std::vector<Point> &p, const std::vector<double>& value)
+	void SS::update(const std::vector<double>& value)
 	{
-		points.clear();
-		for (auto elem : p)
-			points.push_back(elem);
-
-		size_t segment_num = p.size() - 1;
+		size_t segment_num = points.size() - 1;
 		alpha.resize(segment_num + 1);
 		std::vector<double> a, b, c;
 		a.resize(segment_num + 1);
@@ -92,11 +88,43 @@ namespace Spline
 			{
 				double h = points[i + 1].get_x() - points[i].get_x(), ksi;
 				master_element(i, elem, ksi);
-				result[0] = alpha[i] * basic(1, ksi) + alpha[i + 1] * basic(2, ksi);
-				result[1] = (alpha[i] * der_basic(1, ksi) + alpha[i + 1] * der_basic(2, ksi)) * 2.0 / h;
-				result[2] = 0.0;
+				result[0] = alpha[i] * basic(1, ksi) + alpha[i + 1] * basic(2, ksi);                         // value
+				result[1] = (alpha[i] * der_basic(1, ksi) + alpha[i + 1] * der_basic(2, ksi)) * 2.0 / h;     // first derivative
+				result[2] = 0.0;                                                                             // second derivative
 				return result;
 			}
 		throw std::runtime_error("The point wasn't found");
 	}
+
+   std::vector<double> SS::regular(double a, double b, size_t n)
+   {
+      std::vector<double> result;
+      points.clear();
+      double h = fabs(b - a) / (n * 1.0), x = 0.0;
+      for (size_t i = 0; i <= n; i++)
+      {
+         x = a + i * h;
+         points.push_back(Point(x, 0, 0));
+         result.push_back(sin(x));         // you can change function here
+      }
+      return result;
+   }
+
+   std::vector<double> SS::adaptive(double a, double b, double r, size_t n)
+   {
+      points.clear();
+      double h = 1.0, len = fabs(b - a), x = 0.0;
+      for (size_t i = 1; i < n; i++)
+         h = h + pow(r, i);
+      h = len / h;
+      std::vector<double> result;
+      result[0] = a;
+      for (size_t i = 1; i <= n; i++)
+      {
+         x = points[i - 1].get_x() + h * pow(r, i - 1);
+         points.push_back(Point(x, 0, 0));
+         result.push_back(x);             // you can change function here
+      }
+      return result;
+   }
 }

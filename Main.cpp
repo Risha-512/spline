@@ -1,89 +1,53 @@
 #include "CIS.h"
 #include "SS.h"
-
-namespace Spline
-{
-
-	//std::vector <Point> regular(double a, double b, size_t n)
-	//{
-	//	//Value.clear();
-	//	double h = fabs(b - a) / (n * 1.0);
-	//	std::vector<Point> result;
-	//	double x = 0.0;
-	//	for (size_t i = 0; i <= n; i++)
-	//	{
-	//		x = a + i * h;
-	//		result.push_back(Point(x, 0, 0));
-	//		//Value.push_back(x);
-	//	}
-	//	return result;
-	//}
-
-	//std::vector<Point> adaptive(double a, double b, double r, size_t n)
-	//{
-	//	double h = 1.0, len = fabs(b - a);
-	//	for (size_t i = 1; i < n; i++)
-	//		h = h + pow(r, i);
-	//	h = len / h;
-	//	std::vector<Point> result;
-	//	result[0] = Point(a, 0, 0);
-	//	for (size_t i = 1; i <= n; i++)
-	//		result.push_back(Point(result[i - 1].get_x() + h * pow(r, i - 1), 0, 0));
-	//	return result;
-	//}
-}
+#include <iostream>
 
 using namespace Spline;
 
 int main()
 {
-	std::vector <double> value;
-	double a = 0.0, b = 1.0;
-	size_t n = 10;
-	double h = fabs(b - a) / (n * 1.0);
-	std::vector<Point> result;
-	double x = 0.0;
-	for (size_t i = 0; i <= n; i++)
-	{
-		x = a + i * h;
-		result.push_back(Point(x, 0, 0));
-		value.push_back(x);
-	}
-	SS g(0.01);
-	g.update(result, value);
-	std::vector<double> Ans;
-	n = 100;
-	h = fabs(b - a) / (n * 1.0);
-	for (size_t i = 0; i <= n; i++)
-	{
-		x = a + i * h;
-		result.push_back(Point(x, 0, 0));
-		Ans = g.get_value(result[i]);
-	}
+   //parameters of cubic interpolation spline
 
+   double a = 0.0, b = 1.0;
+   size_t n = 10;
+   CIS cspl;
+   std::vector<double> value = cspl.regular(a, b, n);     // function value in given points
+   cspl.update(value);
 
-	//std::vector <double> value;
-	//double a = 0.0, b = 1.0;
-	//size_t n = 10;
-	//double h = fabs(b - a) / (n * 1.0);
-	//std::vector<Point> result;
-	//double x = 0.0;
-	//for (size_t i = 0; i <= n; i++)
-	//{
-	//	x = a + i * h;
-	//	result.push_back(Point(x, 0, 0));
-	//	value.push_back(x * x);
-	//}
-	//CIS S3;
-	//S3.update(result, value);
-	//std::vector<double> Ans;
-	//n = 100;
-	//h = fabs(b - a) / (n * 1.0);
-	//for (size_t i = 0; i <= n; i++)
-	//{
-	//	x = a + i * h;
-	//	result.push_back(Point(x, 0, 0));
-	//	Ans = S3.get_value(result[i]);
-	//}
-    return 1;
+   n = 15;
+   double h = fabs(b - a) / (n * 1.0), x = 0.0;
+   std::vector<std::vector<double>> result (n);
+
+   std::cout << "Cubic Interpolation Spline:" << std::endl << "a = " << a << ", b = " << b << ", n = " << n << std::endl << std::endl;
+   for (size_t i = 0; i < n; i++)
+   {
+      x = a + i * h;
+      result[i] = cspl.get_value(Point(x, 0.0, 0.0));
+      std::cout << " " << result[i][0] << "\t" << result[i][1] << "\t" << result[i][2] << std::endl;      // make a graph of values result[i][0]
+   }
+
+   /****************************************************************************************************************************************************/
+
+   // parameters of smoothing spline
+
+   double smooth = 0.1;
+   a = 1.0; b = 2.0; n = 10;
+   SS sspl(smooth);
+   value = sspl.regular(a, b, n);
+   sspl.update(value);
+
+   n = 15;
+   h = fabs(b - a) / (n * 1.0), x = 0.0;
+   result.clear();
+   result.resize(n);
+
+   std::cout << std::endl << "Smoothing Spline:" << std::endl << "a = " << a << ", b = " << b << ", n = " << n << std::endl << std::endl;
+   for (size_t i = 0; i < n; i++)
+   {
+      x = a + i * h;
+      result[i] = sspl.get_value(Point(x, 0.0, 0.0));
+      std::cout << " " << result[i][0] << "\t" << result[i][1] << "\t" << result[i][2] << std::endl;      // make a graph of values result[i][0]
+   }
+
+   return 1;
 }
