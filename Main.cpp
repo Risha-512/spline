@@ -12,9 +12,9 @@ int main()
    std::cout.setf(std::ios::fixed, std::ios::floatfield);
    std::cout.precision(6);
    
-   // change function here
+   // function can be changed here
    auto function = [](double x){
-       return sin(x);
+       return x*x*x;
    };
    
    // parameters of cubic interpolation spline
@@ -65,7 +65,8 @@ int main()
    result.clear();
    result.resize(n);
 
-   std::cout << std::endl << "Smoothing Spline:" << std::endl << "a = " << a << ", b = " << b << ", n = " << n << std::endl << std::endl;
+   std::cout << std::endl << "Smoothing Spline(" << smooth << "):" << std::endl
+   << "a = " << a << ", b = " << b << ", n = " << n << std::endl << std::endl;
    for (size_t i = 0; i < n; i++)
    {
       x = a + i * h;
