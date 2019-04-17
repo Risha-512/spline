@@ -3,12 +3,12 @@
 namespace Spline
 {
     template <typename Func>
-    void regular(std::vector<Point> &points, std::vector<double> &F_value, double a, double b, size_t n, Func f)
+    void regular(std::vector<Point>& points, std::vector<double>& F_value, double a, double b, size_t n, Func f)
     {
         points.clear();
         F_value.clear();
         
-        double h = fabs(b - a) / (double)n, x = 0.0;
+        double h = fabs(b - a) / (double) n, x = 0.0;
         for (size_t i = 0; i <= n; i++)
         {
             x = a + i * h;
@@ -18,14 +18,14 @@ namespace Spline
     }
     
     template <typename Func>
-    void addaptive(std::vector<Point> &points, std::vector<double> &F_value, double a, double b, double r, size_t n, Func f)
+    void addaptive(std::vector<Point>& points, std::vector<double>& F_value, double a, double b, double r, size_t n, Func f)
     {
         points.clear();
         F_value.clear();
         
         double h = 1.0, len = fabs(b - a), x = 0.0;
         for (size_t i = 1; i < n; i++)
-            h = h + pow(r, i);
+            h += pow(r, i);
         h = len / h;
         points.emplace_back(Point(a, 0, 0));
         F_value.push_back(f(a));
