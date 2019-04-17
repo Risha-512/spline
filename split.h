@@ -27,7 +27,7 @@ namespace Spline
         for (size_t i = 1; i < n; i++)
             h = h + pow(r, i);
         h = len / h;
-        F_value[0] = a;
+        points.emplace_back(a, 0, 0);
         for (size_t i = 1; i <= n; i++)
         {
             x = points[i - 1].get_x() + h * pow(r, i - 1);

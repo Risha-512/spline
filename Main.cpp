@@ -13,28 +13,29 @@ int main()
    std::cout.precision(6);
    
    // function can be changed here
-   auto function = [](double x){
-       return x*x*x;
-   };
+   auto function = [](double x) { return x*x; };
    
-   // parameters of cubic interpolation spline
-   double a = 0.0, b = 1.0;
-   size_t n = 10;
-   CIS cspl;
+   /**************************************************************************************************************************/
+   // Cubic Interpolation Spline
+   
+   double a = 0.0, b = 1.0, h = 0.0, x = 0.0;
+   size_t n_nodes = 15, n_values = 40;
    
    std::vector<Point> points_vec;
    std::vector<double> value;
-   regular(points_vec, value, a, b, n, function);
    
+   CIS cspl;
+   
+//   addaptive(points_vec, value, a, b, 0.5, n_nodes, function);
+   regular(points_vec, value, a, b, n_nodes, function);
    cspl.update_spline(points_vec, value);
 
-   n = 15;
-   double h = fabs(b - a) / (double)n, x = 0.0;
-   std::vector<std::vector<double>> result(n);
+   h = fabs(b - a) / (double)n_values;
+   std::vector<std::vector<double>> result(n_values);
 
    std::cout << "Cubic Interpolation Spline:" << std::endl
-   << "a = " << a << ", b = " << b << ", n = " << n << std::endl << std::endl;
-   for (size_t i = 0; i < n; i++)
+   << "a = " << a << ", b = " << b << ", n = " << n_values << std::endl << std::endl;
+   for (size_t i = 0; i < n_values; i++)
    {
       x = a + i * h;
       result[i] = cspl.get_value(Point(x, 0.0, 0.0));
@@ -48,26 +49,21 @@ int main()
       std::cout << std::endl;
    }
 
-   /****************************************************************************************************************************************************/
-
-   // parameters of smoothing spline
+   /**************************************************************************************************************************/
+   // Smoothing Spline
 
    double smooth = 0.1;
-   a = 1.0; b = 2.0; n = 10;
-   
    SS sspl(smooth);
    
-   regular(points_vec, value, a, b, n, function);
+   regular(points_vec, value, a, b, n_nodes, function);
    sspl.update_spline(points_vec, value);
 
-   n = 15;
-   h = fabs(b - a) / (double)n, x = 0.0;
    result.clear();
-   result.resize(n);
+   result.resize(n_values);
 
    std::cout << std::endl << "Smoothing Spline(" << smooth << "):" << std::endl
-   << "a = " << a << ", b = " << b << ", n = " << n << std::endl << std::endl;
-   for (size_t i = 0; i < n; i++)
+   << "a = " << a << ", b = " << b << ", n_nodes = " << n_values << std::endl << std::endl;
+   for (size_t i = 0; i < n_values; i++)
    {
       x = a + i * h;
       result[i] = sspl.get_value(Point(x, 0.0, 0.0));
