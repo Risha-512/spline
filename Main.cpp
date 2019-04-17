@@ -13,14 +13,15 @@ int main()
     std::cout.precision(6);
     
     // function can be changed here
-    auto function = [](double x) { return x * x; };
+    auto function = [](double x) { return x*x; };
     
     // parameters
-    size_t n_nodes = 15,
-            n_values = 15;
+    size_t n_nodes = 25,
+            n_values = 30;
     double a = 0.0, b = 1.0;
     double h = fabs(b - a) / (double) n_values,
             x = 0.0;
+    double max_apr_err = 0.0;
     
     std::vector<Point> points_vec;
     std::vector<double> value;
@@ -28,22 +29,29 @@ int main()
     // two-dimensional vector for storing result
     std::vector<std::vector<double>> result(n_values);
     
-    
+    // print out parameters
+    std::cout << "a = " << a
+              << ", b = " << b
+              << ", n = " << n_values
+              << ", h = " << h
+              << std::endl << std::endl;
     //
     // Cubic Interpolation Spline
     //
-    
     CIS cspl;
     
-    addaptive(points_vec, value, a, b, 0.5, n_nodes, function);
+    //    addaptive(points_vec, value, a, b, 0.5, n_nodes, function);
+    regular(points_vec, value, a, b, n_nodes, function);
     cspl.update_spline(points_vec, value);
     
-    std::cout << "Cubic Interpolation Spline:" << std::endl
-              << "a = " << a << ", b = " << b << ", n = " << n_values << std::endl << std::endl;
+    std::cout << "Cubic Interpolation Spline:" << std::endl;
     for (size_t i = 0; i < n_values; i++)
     {
         x = a + i * h;
         result[i] = cspl.get_value(Point(x, 0.0, 0.0));
+        
+        if (double approximation_error = fabs(2*x - result[i][1]); approximation_error > max_apr_err)
+            max_apr_err = approximation_error;
         
         for (size_t j = 0; j < 3; j++)
         {
@@ -53,6 +61,8 @@ int main()
         }
         std::cout << std::endl;
     }
+    
+    std::cout << "max approximation error: " << max_apr_err << std::endl;
     
     //
     // Smoothing Spline
@@ -67,8 +77,7 @@ int main()
     result.clear();
     result.resize(n_values);
     
-    std::cout << std::endl << "Smoothing Spline(" << smooth << "):" << std::endl
-              << "a = " << a << ", b = " << b << ", n = " << n_values << std::endl << std::endl;
+    std::cout << std::endl << "Smoothing Spline(" << smooth << "):" << std::endl;
     for (size_t i = 0; i < n_values; i++)
     {
         x = a + i * h;
